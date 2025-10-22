@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AI Interview Feedback Report</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body { font-family: 'Poppins', sans-serif; background: #f5f7fa; margin: 0; padding: 40px; }
+    .container { max-width: 900px; margin: auto; background: #fff; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); padding: 40px 50px; }
+    h1 { text-align: center; color: #0d3b66; font-size: 2rem; margin-bottom: 10px; }
+    h3 { color: #144552; border-bottom: 2px solid #d1e8f0; padding-bottom: 5px; margin-top: 25px; }
+    .section { background: #f8fbfc; padding: 20px; border-left: 5px solid #0d3b66; border-radius: 10px; margin-top: 15px; white-space: pre-wrap; line-height: 1.6; }
+    .emotion-item { margin-bottom: 10px; padding: 10px; background: #eef5f6; border-radius: 8px; }
+    .emotion-item strong { color: #0d3b66; }
+    canvas { margin-top: 20px; width: 100%; height: 300px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📊 AI Interview Feedback Report</h1>
+
+    <h3>🎧 Emotion Analysis</h3>
+    <div id="emotion-container" class="section">Loading emotion data...</div>
+
+    <canvas id="emotionChart"></canvas>
+
+    <h3>📝 Final AI Feedback</h3>
+    <div id="final-feedback" class="section">Loading final feedback...</div>
+  </div>
+
+  <script>
+    async function loadResults() {
+      // Fetch feedback and answers summary
+      const res = await fetch("/final_feedback");
+      const data = await res.json();
+
+      // Display final feedback
+      document.getElementById("final-feedback").innerText = data.final_feedback || "No feedback available.";
+
+      const container = document.getElementById("emotion-container");
+
+      if (!data.answers_summary || data.answers_summary.length === 0) {
+        container.innerText = "No emotion data available.";
+        return;
+      }
+
+      // Render emotion cards
+      container.innerHTML = data.answers_summary
+        .map(a => `<div class="emotion-item"><strong>Question ${a.question}:</strong> ${a.description}</div>`)
+        .join("");
+
+      // Render bar chart
+      const ctx = document.getElementById("emotionChart");
+      const emotionCounts = {};
+      data.answers_summary.forEach(a => {
+        emotionCounts[a.emotion] = (emotionCounts[a.emotion] || 0) + 1;
+      });
+
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: Object.keys(emotionCounts),
+          datasets: [{
+            label: 'Emotion Frequency',
+            data: Object.values(emotionCounts),
+            backgroundColor: ['#4CAF50', '#FF9800', '#2196F3', '#F44336', '#9C27B0', '#9E9E9E'],
+            borderRadius: 8
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { display: false },
+            title: {
+              display: true,
+              text: 'Emotional Trends Across Interview',
+              color: '#0d3b66',
+              font: { size: 18, weight: 'bold' }
+            }
+          },
+          scales: { y: { beginAtZero: true }, x: {} }
+        }
+      });
+    }
+
+    loadResults();
+  </script>
+</body>
+</html>
