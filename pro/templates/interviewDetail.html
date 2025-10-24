@@ -4,59 +4,176 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AI Interview Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    body { font-family: Arial; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background: #f0f8ff; }
-    .container { background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 380px; }
-    h1 { text-align: center; color: #00796b; }
-    label { font-weight: bold; margin-top: 12px; display: block; }
-    select, input { width: 100%; padding: 8px; margin-top: 5px; border-radius: 6px; border: 1px solid #ccc; }
-    button { margin-top: 20px; width: 100%; padding: 10px; background-color: #00796b; color: white; border: none; border-radius: 6px; cursor: pointer; }
-    button:hover { background-color: #004d40; }
+    /* ---------- Base Styles ---------- */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: #333;
+    }
+
+    /* ---------- Card Container ---------- */
+    .container {
+      display: flex;
+      flex-direction: row;
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+      width: 850px;
+      max-width: 95%;
+      overflow: hidden;
+      transition: transform 0.3s;
+    }
+
+    .container:hover { transform: translateY(-5px); }
+
+    /* ---------- Left Panel ---------- */
+    .left-panel {
+      flex: 1;
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      color: white;
+      padding: 50px 30px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      text-align: center;
+    }
+    .left-panel h1 {
+      font-size: 2rem;
+      margin-bottom: 15px;
+    }
+    .left-panel p {
+      font-size: 1rem;
+      opacity: 0.9;
+      line-height: 1.5;
+    }
+
+    /* ---------- Right Panel ---------- */
+    .right-panel {
+      flex: 1;
+      padding: 40px 30px;
+    }
+    .right-panel h2 {
+      color: #764ba2;
+      font-size: 1.6rem;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-top: 15px;
+      margin-bottom: 5px;
+      color: #555;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px 15px;
+      margin-bottom: 10px;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+      outline: none;
+      transition: all 0.3s ease;
+      font-size: 0.95rem;
+    }
+    input:focus, select:focus {
+      border-color: #764ba2;
+      box-shadow: 0 0 10px rgba(118, 75, 162, 0.3);
+    }
+
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(to right, #667eea, #764ba2);
+      border: none;
+      border-radius: 12px;
+      color: white;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    button:hover {
+      opacity: 0.9;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    /* ---------- Responsive ---------- */
+    @media (max-width: 900px) {
+      .container { flex-direction: column; width: 90%; }
+      .left-panel { padding: 40px; }
+      .right-panel { padding: 30px; }
+    }
+
+    @media (max-width: 480px) {
+      .left-panel h1 { font-size: 1.5rem; }
+      .right-panel h2 { font-size: 1.3rem; }
+    }
   </style>
 </head>
 <body>
-<div class="container">
-  <h1>Start AI Interview</h1>
-  <form action="/start_interview" method="POST">
-    <label for="domain">Domain</label>
-    <select name="domain" id="domain" required onchange="updateSpecializations()">
-      <option value="">-- Select Domain --</option>
-      <option value="Software">Software</option>
-      <option value="DevOps">DevOps</option>
-      <option value="Data Science">Data Science</option>
-    </select>
+  <div class="container">
+    <!-- Left Panel -->
+    <div class="left-panel">
+      <h1>AI Interview Portal</h1>
+      <p>Prepare for your next interview by generating custom questions based on your skills, experience, and desired domain. Get ready to ace it!</p>
+    </div>
 
-    <label for="specialization">Specialization</label>
-    <select name="specialization" id="specialization" required>
-      <option value="">-- Select Specialization --</option>
-    </select>
+    <!-- Right Panel (Form) -->
+    <div class="right-panel">
+      <h2>Start Your Interview</h2>
+      <form action="/start_interview" method="POST">
+        <label for="domain">Domain</label>
+        <select name="domain" id="domain" required onchange="updateSpecializations()">
+          <option value="">-- Select Domain --</option>
+          <option value="Software">Software</option>
+          <option value="DevOps">DevOps</option>
+          <option value="Data Science">Data Science</option>
+        </select>
 
-    <label for="skills">Key Skills (comma separated)</label>
-    <input type="text" name="skills" id="skills" placeholder="Python, React, Docker">
+        <label for="specialization">Specialization</label>
+        <select name="specialization" id="specialization" required>
+          <option value="">-- Select Specialization --</option>
+        </select>
 
-    <label for="experience">Years of Experience</label>
-    <input type="number" name="experience" id="experience" min="0" max="40" step="0.5">
+        <label for="skills">Key Skills (comma separated)</label>
+        <input type="text" name="skills" id="skills" placeholder="Python, React, Docker">
 
-    <label for="num_questions">Number of Questions</label>
-    <input type="number" name="num_questions" id="num_questions" min="1" max="20" value="5" required>
+        <label for="experience">Years of Experience</label>
+        <input type="number" name="experience" id="experience" min="0" max="40" step="0.5">
 
-    <button type="submit">Start Interview</button>
-  </form>
-</div>
+        <label for="num_questions">Number of Questions</label>
+        <input type="number" name="num_questions" id="num_questions" min="1" max="20" value="5" required>
 
-<script>
-const specializationMap = {
-  "Software": ["Frontend", "Backend", "Full Stack", "Mobile"],
-  "DevOps": ["CI/CD", "Kubernetes", "Cloud", "Infrastructure"],
-  "Data Science": ["ML", "Deep Learning", "MLOps", "Analytics"]
-};
+        <button type="submit">Start Interview</button>
+      </form>
+    </div>
+  </div>
 
-function updateSpecializations() {
-  const domain = document.getElementById("domain").value;
-  const sel = document.getElementById("specialization");
-  sel.innerHTML = '<option value="">-- Select Specialization --</option>';
-  if(specializationMap[domain]) specializationMap[domain].forEach(s => sel.innerHTML += `<option>${s}</option>`);
-}
-</script>
+  <script>
+    const specializationMap = {
+      "Software": ["Frontend", "Backend", "Full Stack", "Mobile"],
+      "DevOps": ["CI/CD", "Kubernetes", "Cloud", "Infrastructure"],
+      "Data Science": ["ML", "Deep Learning", "MLOps", "Analytics"]
+    };
+
+    function updateSpecializations() {
+      const domain = document.getElementById("domain").value;
+      const sel = document.getElementById("specialization");
+      sel.innerHTML = '<option value="">-- Select Specialization --</option>';
+      if(specializationMap[domain])
+        specializationMap[domain].forEach(s => sel.innerHTML += `<option>${s}</option>`);
+    }
+  </script>
 </body>
 </html>
