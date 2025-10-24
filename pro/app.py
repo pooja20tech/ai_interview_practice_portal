@@ -26,58 +26,41 @@ users = {}
 # --------------------------
 # ROUTE: SIGNUP
 # --------------------------
-@app.route("/signup", methods=["GET", "POST"])
-def signup():
+@app.route("/auth", methods=["GET","POST"])
+def auth():
     if request.method == "POST":
-        full_name = request.form.get("full_name")
-        email = request.form.get("email")
-        password = request.form.get("password")
-        confirm_password = request.form.get("confirm_password")
-        college = request.form.get("college")
+        # Distinguish form by which fields exist
+        if "full_name" in request.form:  # signup form
+            full_name = request.form.get("full_name")
+            email = request.form.get("email")
+            password = request.form.get("password")
+            confirm_password = request.form.get("confirm_password")
 
-        if password != confirm_password:
-            flash("Passwords do not match!", "error")
-            return redirect(url_for("signup"))
-        if email in users:
-            flash("Email already registered!", "error")
-            return redirect(url_for("signup"))
+            if password != confirm_password:
+                return {"status": "error", "message": "Passwords do not match!"}
 
-        users[email] = {
-            "full_name": full_name,
-            "password_hash": generate_password_hash(password),
-            "college": college
-        }
+            if email in users:
+                return {"status": "error", "message": "Email already registered!"}
 
-        flash("Signup successful! Please login.", "success")
-        return redirect(url_for("login"))
+            users[email] = {"full_name": full_name, "password_hash": generate_password_hash(password)}
+            return {"status": "success", "message": "Signup successful! Please login."}
 
-    return render_template("signup.html")
+        else:  # login form
+            email = request.form.get("email")
+            password = request.form.get("password")
+            user = users.get(email)
 
-# --------------------------
-# ROUTE: LOGIN
-# --------------------------
-@app.route("/login", methods=["GET", "POST"])
-def login():
-    if request.method == "POST":
-        email = request.form.get("email")
-        password = request.form.get("password")
-        user = users.get(email)
-        if user and check_password_hash(user["password_hash"], password):
-            session["user_email"] = email
-            session["user_name"] = user["full_name"]
-            flash("Login successful!", "success")
-            return redirect(url_for("dashboard"))
-        else:
-            flash("Invalid credentials!", "error")
-            return redirect(url_for("login"))
+            if user and check_password_hash(user["password_hash"], password):
+                session["user_email"] = email
+                session["user_name"] = user["full_name"]
+                return {"status": "success", "message": "Login successful!"}
+            else:
+                return {"status": "error", "message": "Invalid credentials!"}
 
-    return render_template("login.html")
+    # GET request
+    mode = request.args.get("mode", "signup")
+    return render_template("auth.html", mode=mode)
 
-@app.route("/logout")
-def logout():
-    session.clear()
-    flash("You have been logged out successfully.", "success")
-    return redirect(url_for("login"))
 
 # --------------------------
 # ROUTE: LANDING PAGE
@@ -93,9 +76,9 @@ def index():
 @app.route("/dashboard")
 def dashboard():
     if "user_email" not in session:
-        flash("Please login first", "error")
-        return redirect(url_for("login"))
+        return redirect(url_for("auth", mode="login"))
     return render_template("dashboard.html", name=session["user_name"])
+
 
 # --------------------------
 # ROUTE: INTERVIEW DETAIL
@@ -166,7 +149,7 @@ def start_interview():
     session["questions"] = questions
 
     # Return first question directly (no greetings)
-    return render_template("interview.html", question=questions[0])
+    return render_template("interview.html", question=questions[0], total_questions=len(questions))
 
 
 # --------------------------
@@ -209,13 +192,20 @@ def next_question():
         desc = desc_map.get(emotion, "Candidate’s emotional state was neutral.")
         emotion_summary = {"question": idx + 1, "emotion": emotion, "description": desc, "score": score}
 
-    # Next question
+    # Move to next question
     session["current_index"] += 1
     questions = session.get("questions", [])
+
     if session["current_index"] >= len(questions):
         return jsonify({"done": True, "emotion_summary": emotion_summary})
 
-    return jsonify({"done": False, "question": questions[session["current_index"]], "emotion_summary": emotion_summary})
+    return jsonify({
+        "done": False,
+        "question": questions[session["current_index"]],
+        "q_number": session["current_index"] + 1,
+        "emotion_summary": emotion_summary
+    })
+
 
 # --------------------------
 # ROUTE: FINAL FEEDBACK
