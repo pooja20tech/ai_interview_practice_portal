@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>InterviewAI - Login / Signup</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ---------- Base ---------- */
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      color: #333;
+    }
+
+    .auth-container {
+      perspective: 1200px;
+    }
+
+    .auth-card {
+      width: 850px;
+      height: 550px;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.9s ease-in-out;
+      border-radius: 16px;
+    }
+
+    .auth-card.flipped {
+      transform: rotateY(180deg);
+    }
+
+    /* ---------- Faces ---------- */
+    .auth-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.2);
+      display: flex;
+    }
+
+    .auth-front, .auth-back {
+      background: white;
+    }
+
+    .auth-back {
+      transform: rotateY(180deg);
+    }
+
+    /* ---------- Panels ---------- */
+    .left-panel, .right-panel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 40px;
+      box-sizing: border-box;
+    }
+
+    .left-panel {
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      color: white;
+      text-align: center;
+    }
+
+    .left-panel h3 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .left-panel p {
+      font-size: 0.9rem;
+      opacity: 0.9;
+      max-width: 260px;
+      margin: 0 auto;
+    }
+
+    .left-panel button {
+      margin-top: 1.5rem;
+      padding: 10px 30px;
+      border: 1px solid #fff;
+      background: transparent;
+      color: #fff;
+      border-radius: 25px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .left-panel button:hover {
+      background: rgba(255,255,255,0.15);
+    }
+
+    .right-panel {
+      text-align: center;
+    }
+
+    .right-panel h2 {
+      color: #333;
+      font-size: 1.8rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .right-panel p {
+      color: #555;
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+    }
+
+    form {
+      width: 100%;
+      max-width: 300px;
+      margin: 0 auto;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px 15px;
+      margin: 8px 0;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      outline: none;
+      background: #f7f8fc;
+      transition: 0.3s;
+    }
+
+    input:focus {
+      border-color: #764ba2;
+      box-shadow: 0 0 5px rgba(118,75,162,0.3);
+    }
+
+    button {
+      width: 100%;
+      padding: 12px 0;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .submit-btn {
+      background: linear-gradient(to right, #6a11cb, #2575fc);
+      color: white;
+      font-weight: 600;
+    }
+
+    .submit-btn:hover {
+      opacity: 0.9;
+    }
+
+    .switch-btn {
+      margin-top: 1rem;
+      background: none;
+      color: #2575fc;
+      font-weight: 500;
+      border: none;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    .logout-btn {
+      margin-top: 10px;
+      background: #ff6b6b;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 15px;
+      cursor: pointer;
+    }
+
+    .logout-btn:hover {
+      background: #ff4757;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="auth-container">
+  <div class="auth-card" id="authCard">
+
+    <!-- SIGNUP FACE -->
+    <div class="auth-face auth-front">
+      <div class="left-panel">
+        <h3>Welcome Back!</h3>
+        <p>To keep connected with us, please login with your personal info to start interview practice.</p>
+        <button type="button" onclick="flipCard()">Sign In</button>
+      </div>
+      <div class="right-panel">
+        <h2>Create Account</h2>
+        <p>or use your email for registration</p>
+        <form id="signupForm">
+          <input type="text" name="full_name" placeholder="Full Name" required>
+          <input type="email" name="email" placeholder="Email" required>
+          <input type="password" name="password" placeholder="Password" required>
+          <input type="password" name="confirm_password" placeholder="Confirm Password" required>
+          <button type="submit" class="submit-btn">Sign Up</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- LOGIN FACE -->
+    <div class="auth-face auth-back">
+      <div class="left-panel">
+        <h3>Hello, Friend!</h3>
+        <p>Enter your personal details and start your journey with us.</p>
+        <button type="button" onclick="flipCard()">Sign Up</button>
+      </div>
+      <div class="right-panel">
+        <h2>Sign In to InterviewAI</h2>
+        <p>Enter your credentials to continue</p>
+        <form id="loginForm">
+          <input type="email" name="email" placeholder="Email" required>
+          <input type="password" name="password" placeholder="Password" required>
+          <button type="submit" class="submit-btn">Login</button>
+        </form>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const authCard = document.getElementById('authCard');
+
+function flipCard() {
+  authCard.classList.toggle('flipped');
+}
+
+// Handle signup with AJAX
+document.getElementById('signupForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const formData = new FormData(this);
+
+  const response = await fetch("/auth", {
+    method: "POST",
+    body: formData
+  });
+
+  const data = await response.json();
+
+  if (data.status === "success") {
+    alert(data.message);
+    authCard.classList.add('flipped'); // Flip to login side
+  } else {
+    alert(data.message); // show error
+  }
+});
+
+// Handle login with AJAX
+document.getElementById('loginForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const formData = new FormData(this);
+
+  const response = await fetch("/auth", {
+    method: "POST",
+    body: formData
+  });
+
+  const data = await response.json();
+
+  if (data.status === "success") {
+    window.location.href = "/dashboard"; // Go to dashboard
+  } else {
+    alert(data.message); // show error
+  }
+});
+</script>

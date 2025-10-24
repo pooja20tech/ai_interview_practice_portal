@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Progress Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+:root {
+  --bg:#0f1724;
+  --card:#0b1220;
+  --muted:#94a3b8;
+  --accent:#4f46e5;
+  --accent-2:#06b6d4;
+  --success:#10b981;
+  --danger:#ef4444;
+  --glass: rgba(255,255,255,0.03);
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  font-family:Inter, system-ui, sans-serif;
+  background: linear-gradient(180deg,#071028,#081026);
+  color:#e6eef8;
+}
+.wrap{
+  max-width: 1800px;
+  margin:0 auto;
+  padding:25px;
+  width:100%;
+}
+.topbar{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:30px;
+}
+.title{ font-size:32px; font-weight:700; }
+.subtitle{ color: var(--muted); font-size:16px; margin-top:4px; }
+.controls{
+  display:flex;
+  gap:12px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+.btn{
+  background: linear-gradient(90deg,var(--accent),var(--accent-2));
+  color:#fff;
+  padding:14px 24px;
+  border-radius:12px;
+  border:none;
+  cursor:pointer;
+  font-weight:600;
+  font-size:16px;
+}
+.chip{
+  background: var(--glass);
+  padding:10px 16px;
+  border-radius:999px;
+  color: var(--muted);
+  font-size:14px;
+}
+
+.layout{
+  display:grid;
+  grid-template-columns:1fr 2fr;
+  gap:30px;
+}
+@media(max-width:1024px){ .layout{ grid-template-columns:1fr; } }
+
+/* LEFT COLUMN */
+.left-col{ display:flex; flex-direction:column; gap:24px; }
+.card{
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.015));
+  border: 1px solid rgba(255,255,255,0.04);
+  padding:25px;
+  border-radius:16px;
+  box-shadow: 0 8px 24px rgba(2,6,23,0.6);
+}
+.stat{ display:flex; align-items:center; gap:40px; margin-bottom:16px; }
+.icon{
+  width:60px; height:60px; border-radius:16px;
+  display:flex; align-items:center; justify-content:center;
+  background: linear-gradient(135deg,var(--accent),var(--accent-2));
+  font-size:28px;
+}
+.meta{ flex:1; }
+.label{ font-size:16px; color:var(--muted); }
+.value{ font-size:22px; font-weight:700; margin-top:2px; }
+
+.best{
+  display:flex; gap:20px; align-items:center; padding:20px;
+  border-radius:16px;
+  background:linear-gradient(90deg, rgba(79,70,229,0.12), rgba(6,182,212,0.05));
+}
+.best .badge{
+  font-weight:800;
+  color:#fff;
+  background:linear-gradient(90deg,var(--accent),var(--accent-2));
+  padding:16px;
+  border-radius:16px;
+  min-width:80px;
+  font-size:18px;
+  text-align:center;
+}
+
+/* Domain bars */
+.domain-row{ display:flex; align-items:center; gap:16px; margin-bottom:16px; }
+.domain-label{ width:180px; color:var(--muted); font-size:14px; }
+.bar-wrap{ flex:1; background: rgba(255,255,255,0.03); border-radius:999px; height:20px; overflow:hidden; }
+.bar-fill{ height:100%; border-radius:999px; background:linear-gradient(90deg,var(--accent),var(--accent-2)); width:0; transition:width 800ms ease; }
+.domain-score{ width:40px; text-align:right; color:var(--muted); font-size:14px; }
+
+/* RIGHT COLUMN */
+.right-col{ display:flex; flex-direction:column; gap:24px; width:100%; }
+.chart-card{ display:flex; flex-direction:column; gap:16px; padding:25px; border-radius:16px; background: var(--card); border:1px solid rgba(255,255,255,0.02); }
+.chart-title{ font-weight:600; color:#e8f0ff; font-size:18px; }
+#scoreChart{ max-height:500px; }
+
+.emotion-wrap{ display:flex; gap:16px; flex-wrap:wrap; margin-top:10px; }
+.emotion-card{
+  padding:14px 16px;
+  border-radius:12px;
+  font-weight:600;
+  font-size:14px;
+  flex:1 1 120px;
+  text-align:center;
+}
+.confident{ background:rgba(79,70,229,0.12); color:#dbeafe; }
+.neutral{ background:rgba(6,182,212,0.1); color:#e0f2fe; }
+.nervous{ background:rgba(239,68,68,0.1); color:#fee2e2; }
+
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- Top Bar -->
+  <div class="topbar">
+    <div>
+      <div class="title">Progress Dashboard</div>
+      <div class="subtitle">Overview of interview performance</div>
+    </div>
+    <div class="controls">
+      <button class="btn" onclick="window.location.href='/interviewDetail'">Start Interview</button>
+      <div class="chip" id="lastUpdated">Last updated: —</div>
+    </div>
+  </div>
+
+  <div class="layout">
+
+    <!-- LEFT COLUMN -->
+    <div class="left-col">
+
+      <!-- Summary Stats -->
+      <div class="card">
+        <div style="font-weight:700;margin-bottom:16px;font-size:28px">Summary</div>
+        <div class="stat">
+          <div class="icon">📊</div>
+          <div class="meta"><div class="label">Total Interviews</div><div class="value" id="totalInterviews">12</div></div>
+        </div>
+        <div class="stat">
+          <div class="icon">⭐</div>
+          <div class="meta"><div class="label">Average Score</div><div class="value" id="averageScore">78</div></div>
+        </div>
+        <div class="stat">
+          <div class="icon">🏆</div>
+          <div class="meta"><div class="label">Best Session</div><div class="value" id="bestScore">92</div></div>
+        </div>
+        <div class="stat">
+          <div class="icon">📈</div>
+          <div class="meta"><div class="label">Recent Change</div><div class="value" id="recentChange">+5</div></div>
+        </div>
+      </div>
+
+      <!-- Best Session Highlight -->
+      <div class="card best">
+        <div style="flex:1">
+          <div style="font-size:20px;color:var(--muted);margin-top:6px">Best Session</div>
+          <div style="font-size:18px;font-weight:800;margin-top:10px">
+            Session on <span id="bestSessionDate">22 Oct</span> — <span id="bestSessionScore">92</span>
+          </div>
+          <div style="margin-top:8px;color:var(--muted);font-size:14px">
+            Highlights: Calm, clear answers; strong structure & confidence.
+          </div>
+        </div>
+        <div class="badge">92</div>
+      </div>
+
+      <!-- Domain Performance -->
+      <div class="card" style="display:flex;flex-direction:column;">
+        <div style="font-weight:700;margin-bottom:16px;font-size:22px">Performance by domain</div>
+        <div class="domain-row">
+          <div class="domain-label">Software Development</div>
+          <div class="bar-wrap"><div id="SoftwareDevelopment-bar" class="bar-fill" style="width:17%"></div></div>
+          <div class="domain-score" id="SoftwareDevelopment-score">17</div>
+        </div>
+        <div class="domain-row">
+          <div class="domain-label">DevOps</div>
+          <div class="bar-wrap"><div id="DevOps-bar" class="bar-fill" style="width:6%"></div></div>
+          <div class="domain-score" id="DevOps-score">6</div>
+        </div>
+        <div class="domain-row">
+          <div class="domain-label">Data Science</div>
+          <div class="bar-wrap"><div id="DataScience-bar" class="bar-fill" style="width:20%"></div></div>
+          <div class="domain-score" id="DataScience-score">20</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div class="right-col">
+      <div class="chart-card">
+        <div class="chart-title">Score progress (last 6 sessions)</div>
+        <canvas id="scoreChart"></canvas>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Emotional Summary</div>
+        <div class="emotion-wrap">
+          <div class="emotion-card confident">Confident: 3</div>
+          <div class="emotion-card neutral">Neutral: 2</div>
+          <div class="emotion-card nervous">Nervous: 1</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+const dashboard={
+  sessions:[
+    {date:'18 Oct',score:72},
+    {date:'19 Oct',score:75},
+    {date:'20 Oct',score:80},
+    {date:'21 Oct',score:76},
+    {date:'22 Oct',score:78},
+    {date:'23 Oct',score:82}
+  ],
+  domainScores:{
+    SoftwareDevelopment:17,
+    DevOps:6,
+    DataScience:20
+  }
+};
+
+// Initialize Chart
+const ctx=document.getElementById('scoreChart').getContext('2d');
+const scoreChart=new Chart(ctx,{
+  type:'line',
+  data:{
+    labels:dashboard.sessions.map(s=>s.date),
+    datasets:[{
+      label:'Score',
+      data:dashboard.sessions.map(s=>s.score),
+      backgroundColor:'rgba(79,70,229,0.2)',
+      borderColor:'rgba(79,70,229,1)',
+      borderWidth:3,
+      tension:0.3,
+      fill:true,
+      pointRadius:6,
+      pointBackgroundColor:'#fff'
+    }]
+  },
+  options:{
+    responsive:true,
+    plugins:{legend:{display:false}},
+    scales:{y:{beginAtZero:true,max:100,ticks:{stepSize:10}}}
+  }
+});
+
+function initUI(){
+  const scores=dashboard.sessions.map(s=>s.score);
+  const total=dashboard.sessions.length;
+  const avg=Math.round(scores.reduce((a,b)=>a+b,0)/scores.length);
+  const best=Math.max(...scores);
+  const bestIndex=dashboard.sessions.findIndex(s=>s.score===best);
+  const recentChange=dashboard.sessions.length>1 ? scores[scores.length-1]-scores[scores.length-2]:0;
+
+  document.getElementById('totalInterviews').textContent=total;
+  document.getElementById('averageScore').textContent=avg;
+  document.getElementById('bestScore').textContent=best;
+  document.getElementById('recentChange').textContent=(recentChange>=0?'+':'')+recentChange;
+  document.getElementById('bestSessionDate').textContent=dashboard.sessions[bestIndex].date;
+  document.getElementById('bestSessionScore').textContent=best;
+
+  for(const k in dashboard.domainScores){
+    const score=dashboard.domainScores[k];
+    document.getElementById(`${k}-bar`).style.width=score+'%';
+    document.getElementById(`${k}-score`).textContent=score;
+  }
+
+  scoreChart.data.labels=dashboard.sessions.map(s=>s.date);
+  scoreChart.data.datasets[0].data=dashboard.sessions.map(s=>s.score);
+  scoreChart.update();
+
+  const d=new Date();
+  document.getElementById('lastUpdated').textContent=`Last updated: ${d.getDate()} ${d.toLocaleString(undefined,{month:'short'})}`;
+}
+
+function pushRealResult(score,domainScores={}){
+  const d=new Date();
+  const dateLabel=`${d.getDate()} ${d.toLocaleString(undefined,{month:'short'})}`;
+  dashboard.sessions.push({date:dateLabel,score});
+  if(dashboard.sessions.length>6) dashboard.sessions.shift();
+  for(const k in domainScores) dashboard.domainScores[k]=domainScores[k];
+  initUI();
+}
+
+window.pushRealResult=pushRealResult;
+initUI();
+</script>
+</body>
+</html>
