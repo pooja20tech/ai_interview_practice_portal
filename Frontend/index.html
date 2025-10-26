@@ -1,15 +1,62 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AI Interview Practice Portal</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Interview Portal</title>
+  <style>
+    body { font-family: Arial; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background: #f0f8ff; }
+    .container { background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 380px; }
+    h1 { text-align: center; color: #00796b; }
+    label { font-weight: bold; margin-top: 12px; display: block; }
+    select, input { width: 100%; padding: 8px; margin-top: 5px; border-radius: 6px; border: 1px solid #ccc; }
+    button { margin-top: 20px; width: 100%; padding: 10px; background-color: #00796b; color: white; border: none; border-radius: 6px; cursor: pointer; }
+    button:hover { background-color: #004d40; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>Start AI Interview</h1>
+  <form action="/start_interview" method="POST">
+    <label for="domain">Domain</label>
+    <select name="domain" id="domain" required onchange="updateSpecializations()">
+      <option value="">-- Select Domain --</option>
+      <option value="Software">Software</option>
+      <option value="DevOps">DevOps</option>
+      <option value="Data Science">Data Science</option>
+    </select>
+
+    <label for="specialization">Specialization</label>
+    <select name="specialization" id="specialization" required>
+      <option value="">-- Select Specialization --</option>
+    </select>
+
+    <label for="skills">Key Skills (comma separated)</label>
+    <input type="text" name="skills" id="skills" placeholder="Python, React, Docker">
+
+    <label for="experience">Years of Experience</label>
+    <input type="number" name="experience" id="experience" min="0" max="40" step="0.5">
+
+    <label for="num_questions">Number of Questions</label>
+    <input type="number" name="num_questions" id="num_questions" min="1" max="20" value="5" required>
+
+    <button type="submit">Start Interview</button>
+  </form>
+</div>
+
+<script>
+const specializationMap = {
+  "Software": ["Frontend", "Backend", "Full Stack", "Mobile"],
+  "DevOps": ["CI/CD", "Kubernetes", "Cloud", "Infrastructure"],
+  "Data Science": ["ML", "Deep Learning", "MLOps", "Analytics"]
+};
+
+function updateSpecializations() {
+  const domain = document.getElementById("domain").value;
+  const sel = document.getElementById("specialization");
+  sel.innerHTML = '<option value="">-- Select Specialization --</option>';
+  if(specializationMap[domain]) specializationMap[domain].forEach(s => sel.innerHTML += `<option>${s}</option>`);
+}
+</script>
+</body>
 </html>
