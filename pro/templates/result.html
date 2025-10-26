@@ -5,37 +5,80 @@
   <title>AI Interview Feedback Report</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    body { font-family: 'Poppins', sans-serif; background: #f5f7fa; margin: 0; padding: 40px; }
-    .container { max-width: 900px; margin: auto; background: #fff; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); padding: 40px 50px; }
-    h1 { text-align: center; color: #0d3b66; font-size: 2rem; margin-bottom: 10px; }
-    h3 { color: #144552; border-bottom: 2px solid #d1e8f0; padding-bottom: 5px; margin-top: 25px; }
-    .section { background: #f8fbfc; padding: 20px; border-left: 5px solid #0d3b66; border-radius: 10px; margin-top: 15px; white-space: pre-wrap; line-height: 1.6; }
-    .emotion-item { margin-bottom: 10px; padding: 10px; background: #eef5f6; border-radius: 8px; }
-    .emotion-item strong { color: #0d3b66; }
-    canvas { margin-top: 20px; width: 100%; height: 300px; }
+body { 
+    font-family: 'Poppins', sans-serif; 
+    background: radial-gradient(circle at top left, rgb(12,15,36), rgb(45,60,115) 70%);
+    margin: 0; 
+    padding: 40px; 
+    color: rgb(230,240,255);
+}
+.container { 
+    max-width: 900px; 
+    margin: auto; 
+    background: rgb(22,27,60); 
+    border-radius: 15px; 
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6); 
+    padding: 40px 50px; 
+}
+h1 { 
+    text-align: center; 
+    color: rgb(0,195,255); 
+    font-size: 2rem; 
+    margin-bottom: 10px; 
+}
+h3 { 
+    color: rgb(125,95,255); 
+    border-bottom: 2px solid rgba(0,195,255,0.3); 
+    padding-bottom: 5px; 
+    margin-top: 25px; 
+}
+.section { 
+    background: rgb(32,37,70); 
+    padding: 20px; 
+    border-left: 5px solid rgb(0,195,255); 
+    border-radius: 10px; 
+    margin-top: 15px; 
+    white-space: pre-wrap; 
+    line-height: 1.6; 
+}
+.emotion-item { 
+    margin-bottom: 10px; 
+    padding: 10px; 
+    background: rgb(25,30,60); 
+    border-radius: 8px; 
+}
+.emotion-item strong { 
+    color: rgb(0,195,255); 
+}
+canvas { 
+    margin-top: 20px; 
+    width: 100%; 
+    height: 300px; 
+    background: rgb(22,27,60); 
+    border-radius: 10px; 
+}
 
-     /* Dashboard Button */
-    .dashboard-btn {
-      position: absolute;
-      top: 30px;
-      right: 50px;
-      padding: 10px 20px;
-      font-size: 0.95rem;
-      font-weight: 600;
-      border: none;
-      border-radius: 8px;
-      background: linear-gradient(135deg, #667eea, #4a90e2);
-      color: #fff;
-      cursor: pointer;
-      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-    .dashboard-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.5);
-    }
-  </style>
+/* Dashboard Button */
+.dashboard-btn {
+    position: absolute;
+    top: 30px;
+    right: 50px;
+    padding: 10px 20px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(135deg, rgb(0,195,255), rgb(125,95,255));
+    color: #fff;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0,195,255,0.4);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.dashboard-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,195,255,0.6);
+}
+</style>
 </head>
 <body>
   <div class="container">
