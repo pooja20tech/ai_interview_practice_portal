@@ -4,184 +4,181 @@
   <meta charset="UTF-8" />
   <title>InterviewAI - Login / Signup</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    /* ---------- Base ---------- */
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #667eea, #764ba2);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      margin: 0;
-      color: #333;
-    }
+   <style>
+  /* ---------- Base ---------- */
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: radial-gradient(circle at top left, rgb(12, 15, 36), rgb(45, 60, 115) 70%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    color: rgb(230, 240, 255);
+  }
 
-    .auth-container {
-      perspective: 1200px;
-    }
+  .auth-container {
+    perspective: 1200px;
+  }
 
-    .auth-card {
-      width: 850px;
-      height: 550px;
-      position: relative;
-      transform-style: preserve-3d;
-      transition: transform 0.9s ease-in-out;
-      border-radius: 16px;
-    }
+  .auth-card {
+    width: 850px;
+    height: 550px;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.9s ease-in-out;
+    border-radius: 20px;
+  }
 
-    .auth-card.flipped {
-      transform: rotateY(180deg);
-    }
+  .auth-card.flipped {
+    transform: rotateY(180deg);
+  }
 
-    /* ---------- Faces ---------- */
-    .auth-face {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      backface-visibility: hidden;
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.2);
-      display: flex;
-    }
+  /* ---------- Faces ---------- */
+  .auth-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 20px;
+    overflow: hidden;
+    background: rgb(22, 27, 60);
+    box-shadow: 0 0 30px rgba(0, 195, 255, 0.2);
+    display: flex;
+  }
 
-    .auth-front, .auth-back {
-      background: white;
-    }
+  .auth-back {
+    transform: rotateY(180deg);
+  }
 
-    .auth-back {
-      transform: rotateY(180deg);
-    }
+  /* ---------- Panels ---------- */
+  .left-panel, .right-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+    box-sizing: border-box;
+  }
 
-    /* ---------- Panels ---------- */
-    .left-panel, .right-panel {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding: 40px;
-      box-sizing: border-box;
-    }
+  .left-panel {
+    background: linear-gradient(135deg, rgb(0, 195, 255), rgb(125, 95, 255));
+    color: #ffffff;
+    text-align: center;
+  }
 
-    .left-panel {
-      background: linear-gradient(135deg, #6a11cb, #2575fc);
-      color: white;
-      text-align: center;
-    }
+  .left-panel h3 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+  }
 
-    .left-panel h3 {
-      font-size: 2rem;
-      margin-bottom: 0.5rem;
-    }
+  .left-panel p {
+    font-size: 0.95rem;
+    opacity: 0.95;
+    max-width: 260px;
+    margin: 0 auto;
+    line-height: 1.5;
+  }
 
-    .left-panel p {
-      font-size: 0.9rem;
-      opacity: 0.9;
-      max-width: 260px;
-      margin: 0 auto;
-    }
+  .left-panel button {
+    margin-top: 1.5rem;
+    padding: 10px 30px;
+    border: 1px solid #fff;
+    background: transparent;
+    color: #fff;
+    border-radius: 25px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
 
-    .left-panel button {
-      margin-top: 1.5rem;
-      padding: 10px 30px;
-      border: 1px solid #fff;
-      background: transparent;
-      color: #fff;
-      border-radius: 25px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: 0.3s;
-    }
+  .left-panel button:hover {
+    background: rgba(255, 255, 255, 0.15);
+  }
 
-    .left-panel button:hover {
-      background: rgba(255,255,255,0.15);
-    }
+  .right-panel {
+    text-align: center;
+  }
 
-    .right-panel {
-      text-align: center;
-    }
+  .right-panel h2 {
+    color: rgb(0, 195, 255);
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+  }
 
-    .right-panel h2 {
-      color: #333;
-      font-size: 1.8rem;
-      margin-bottom: 0.5rem;
-    }
+  .right-panel p {
+    color: rgb(190, 200, 225);
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+  }
 
-    .right-panel p {
-      color: #555;
-      font-size: 0.9rem;
-      margin-bottom: 1.5rem;
-    }
+  form {
+    width: 100%;
+    max-width: 320px;
+    margin: 0 auto;
+  }
 
-    form {
-      width: 100%;
-      max-width: 300px;
-      margin: 0 auto;
-    }
+  input {
+    width: 100%;
+    padding: 12px 15px;
+    margin: 10px 0;
+    border: 1px solid rgb(55, 70, 120);
+    border-radius: 10px;
+    font-size: 0.95rem;
+    outline: none;
+    background: rgb(25, 30, 60);
+    color: rgb(230, 240, 255);
+    transition: all 0.3s;
+  }
 
-    input {
-      width: 100%;
-      padding: 12px 15px;
-      margin: 8px 0;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      font-size: 0.95rem;
-      outline: none;
-      background: #f7f8fc;
-      transition: 0.3s;
-    }
+  input::placeholder {
+    color: rgb(130, 140, 165);
+  }
 
-    input:focus {
-      border-color: #764ba2;
-      box-shadow: 0 0 5px rgba(118,75,162,0.3);
-    }
+  input:focus {
+    border-color: rgb(0, 195, 255);
+    box-shadow: 0 0 10px rgba(0, 195, 255, 0.4);
+    background: rgb(32, 37, 70);
+  }
 
-    button {
-      width: 100%;
-      padding: 12px 0;
-      border: none;
-      border-radius: 8px;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: 0.3s;
-    }
+  button {
+    width: 100%;
+    padding: 12px 0;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
 
-    .submit-btn {
-      background: linear-gradient(to right, #6a11cb, #2575fc);
-      color: white;
-      font-weight: 600;
-    }
+  .submit-btn {
+    background: linear-gradient(to right, rgb(0, 195, 255), rgb(125, 95, 255));
+    color: white;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
 
-    .submit-btn:hover {
-      opacity: 0.9;
-    }
+  .submit-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(0, 195, 255, 0.3);
+  }
 
-    .switch-btn {
-      margin-top: 1rem;
-      background: none;
-      color: #2575fc;
-      font-weight: 500;
-      border: none;
-      cursor: pointer;
-      text-decoration: underline;
-    }
+  .switch-btn {
+    margin-top: 1rem;
+    background: none;
+    color: rgb(0, 195, 255);
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    text-decoration: underline;
+    transition: color 0.3s;
+  }
 
-    .logout-btn {
-      margin-top: 10px;
-      background: #ff6b6b;
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      padding: 10px 15px;
-      cursor: pointer;
-    }
-
-    .logout-btn:hover {
-      background: #ff4757;
-    }
-  </style>
+  .switch-btn:hover {
+    color: rgb(125, 95, 255);
+  }
+</style>
 </head>
 
 <body>
